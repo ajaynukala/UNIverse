@@ -40,9 +40,11 @@ function App() {
   const requireAuth = (Component) => {
     if (!isAuthenticated) return <Navigate to="/" />;
     if (isAuthenticated && !user) {
-      // Corrupted state (has token but no user object), force logout
-      useStore.getState().logout();
-      return <Navigate to="/" />;
+      // Corrupted state: Clear local storage and hard redirect to prevent React render cycle crashes
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      window.location.href = "/";
+      return null;
     }
     if (user && !user.isOnboardingCompleted && Component.name !== 'Onboarding') {
       return <Navigate to="/onboarding" />;
