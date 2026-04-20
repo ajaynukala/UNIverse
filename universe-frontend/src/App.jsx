@@ -39,6 +39,11 @@ function App() {
 
   const requireAuth = (Component) => {
     if (!isAuthenticated) return <Navigate to="/" />;
+    if (isAuthenticated && !user) {
+      // Corrupted state (has token but no user object), force logout
+      useStore.getState().logout();
+      return <Navigate to="/" />;
+    }
     if (user && !user.isOnboardingCompleted && Component.name !== 'Onboarding') {
       return <Navigate to="/onboarding" />;
     }

@@ -2,7 +2,13 @@ import { create } from 'zustand';
 
 const storedUser = localStorage.getItem('user');
 const storedToken = localStorage.getItem('token');
-const initialUser = storedUser ? JSON.parse(storedUser) : null;
+let initialUser = null;
+try {
+  initialUser = storedUser && storedUser !== 'undefined' ? JSON.parse(storedUser) : null;
+} catch (e) {
+  console.error("Failed to parse stored user", e);
+  localStorage.removeItem('user');
+}
 const initialIsAuthenticated = !!storedToken;
 
 const useStore = create((set) => ({
