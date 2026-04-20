@@ -17,14 +17,14 @@ function AnimatedRoutes({ requireAuth, isAuthenticated }) {
   return (
     <AnimatePresence mode="wait">
       <Routes key={location.pathname} location={location}>
-        <Route path="/" element={!isAuthenticated ? <Landing /> : requireAuth(Dashboard)} />
-        <Route path="/register" element={!isAuthenticated ? <Register /> : requireAuth(Dashboard)} />
-        <Route path="/onboarding" element={requireAuth(Onboarding)} />
-        <Route path="/dashboard" element={requireAuth(Dashboard)} />
-        <Route path="/skills" element={requireAuth(SkillDirectory)} />
-        <Route path="/skills/:skillId" element={requireAuth(Roadmap)} />
-        <Route path="/profile" element={requireAuth(Profile)} />
-        <Route path="/settings" element={requireAuth(Settings)} />
+        <Route path="/" element={!isAuthenticated ? <Landing /> : requireAuth(Dashboard, 'dashboard')} />
+        <Route path="/register" element={!isAuthenticated ? <Register /> : requireAuth(Dashboard, 'dashboard')} />
+        <Route path="/onboarding" element={requireAuth(Onboarding, 'onboarding')} />
+        <Route path="/dashboard" element={requireAuth(Dashboard, 'dashboard')} />
+        <Route path="/skills" element={requireAuth(SkillDirectory, 'skills')} />
+        <Route path="/skills/:skillId" element={requireAuth(Roadmap, 'roadmap')} />
+        <Route path="/profile" element={requireAuth(Profile, 'profile')} />
+        <Route path="/settings" element={requireAuth(Settings, 'settings')} />
       </Routes>
     </AnimatePresence>
   );
@@ -37,19 +37,18 @@ function App() {
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
 
-  const requireAuth = (Component) => {
+  const requireAuth = (Component, routeName) => {
     if (!isAuthenticated) return <Navigate to="/" />;
     if (isAuthenticated && !user) {
-      // Corrupted state: Clear local storage and hard redirect to prevent React render cycle crashes
       localStorage.removeItem('token');
       localStorage.removeItem('user');
       window.location.href = "/";
       return null;
     }
-    if (user && !user.isOnboardingCompleted && Component.name !== 'Onboarding') {
+    if (user && !user.isOnboardingCompleted && routeName !== 'onboarding') {
       return <Navigate to="/onboarding" />;
     }
-    if (user && user.isOnboardingCompleted && Component.name === 'Onboarding') {
+    if (user && user.isOnboardingCompleted && routeName === 'onboarding') {
       return <Navigate to="/dashboard" />;
     }
     return <Component />;
