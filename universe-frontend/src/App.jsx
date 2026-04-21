@@ -77,18 +77,17 @@ function GlobalLoader() {
               {/* Jumping Dinosaur */}
               <motion.div
                 className="absolute left-[20%] bottom-0 text-5xl z-10"
-                animate={{ y: [0, -60, 0] }}
-                transition={{ duration: 0.8, repeat: Infinity, ease: "easeInOut" }}
+                animate={{ y: [0, 0, -60, 0, 0] }}
+                transition={{ duration: 1.5, times: [0, 0.45, 0.65, 0.8, 1], repeat: Infinity, ease: "easeInOut" }}
               >
-                🦖
+                <span className="inline-block -scale-x-100">🦖</span>
               </motion.div>
               
               {/* Scrolling Cactus */}
               <motion.div
                 className="absolute bottom-0 text-4xl"
-                initial={{ left: "100%" }}
-                animate={{ left: "-20%" }}
-                transition={{ duration: 1.2, repeat: Infinity, ease: "linear" }}
+                animate={{ left: ["100%", "-20%"] }}
+                transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
               >
                 🌵
               </motion.div>
