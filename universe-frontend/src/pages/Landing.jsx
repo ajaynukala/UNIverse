@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import api from '../api/axios';
 import useStore from '../store/useStore';
@@ -9,6 +9,12 @@ export default function Landing() {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const setAuth = useStore(state => state.setAuth);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Silent ping to preemptively wake up the Render server while the user types their credentials
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
+    fetch(`${apiUrl}/auth/login`, { method: 'OPTIONS' }).catch(() => {});
+  }, []);
 
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
