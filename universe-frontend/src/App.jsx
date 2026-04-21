@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import { AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import useStore from './store/useStore';
 import Landing from './pages/Landing';
 import Register from './pages/Register';
@@ -54,8 +54,24 @@ function App() {
     return <Component />;
   };
 
+function GlobalLoader() {
+  const globalLoading = useStore(state => state.globalLoading);
+  if (!globalLoading) return null;
+  return (
+    <div className="fixed top-0 left-0 w-full h-1 z-50 bg-slate-200 dark:bg-slate-800 overflow-hidden">
+      <motion.div
+        initial={{ x: "-100%" }}
+        animate={{ x: "200%" }}
+        transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+        className="w-1/2 h-full bg-primary"
+      />
+    </div>
+  );
+}
+
   return (
     <Router>
+      <GlobalLoader />
       {isAuthenticated && user?.isOnboardingCompleted && <Navbar />}
       <div className="container mx-auto px-4 md:px-8 py-8 w-full max-w-7xl">
         <AnimatedRoutes requireAuth={requireAuth} isAuthenticated={isAuthenticated} />

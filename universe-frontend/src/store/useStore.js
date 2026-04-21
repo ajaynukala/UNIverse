@@ -15,6 +15,8 @@ const useStore = create((set) => ({
   user: initialUser,
   token: storedToken,
   isAuthenticated: initialIsAuthenticated,
+  globalLoading: false,
+  setGlobalLoading: (isLoading) => set({ globalLoading: isLoading }),
   setAuth: (user, token) => {
     localStorage.setItem('user', JSON.stringify(user));
     localStorage.setItem('token', token);
